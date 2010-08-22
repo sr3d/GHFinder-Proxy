@@ -4,5 +4,12 @@ This runs at http://ghfinder-proxy.heroku.com to handle the JSONP requests for G
 
 **NOTES**
 
-* To run:  $ shotgun
+* To run:  
+
+    $ shotgun  
+    
+  or
+  
+    $ ruby ghfinder-proxy.rb 
+    
 * To deploy:  $ git push heroku master
