@@ -7,6 +7,7 @@
 #
 require 'rubygems'
 require 'sinatra'
+require 'curb'
 
 configure :production do
   # Configure stuff here you'll want to
@@ -34,7 +35,8 @@ get '/' do
   halt 401, 'invalid url' unless /http:\/\/github.com/i =~ url
   
   html = Curl::Easy.perform url
-  callback.nil? ? html : "#{callback}(#{ escape_javascript(html)})"
+  
+  callback.nil? ? html.body_str : "#{callback}(\"#{escape_javascript(html.body_str)})\")"
 end
 
 # Test at <appname>.heroku.com
