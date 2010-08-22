@@ -16,10 +16,25 @@ configure :production do
   #       from ENV['DATABASE_URI'] (see /env route below)
 end
 
-# Quick test
+JS_ESCAPE_MAP = { '\\' => '\\\\', '</' => '<\/', "\r\n" => '\n', "\n" => '\n', "\r" => '\n', '"' => '\\"', "'" => "\\'" }
+
+def escape_javascript(javascript)
+  if javascript
+    javascript.gsub(/(\\|<\/|\r\n|[\n\r"'])/) { JS_ESCAPE_MAP[$1] }
+  else
+    ''
+  end
+end
+
+
 get '/' do
-  "Congradulations!
-   You're running a Sinatra application on Heroku!"
+  url       = params[:url]
+  callback  = params[:callback]
+  
+  halt 401, 'invalid url' unless /http:\/\/github.com/i =~ url
+  
+  html = Curl::Easy.perform url
+  callback.nil? ? html : "#{callback}(#{ escape_javascript(html)})"
 end
 
 # Test at <appname>.heroku.com
